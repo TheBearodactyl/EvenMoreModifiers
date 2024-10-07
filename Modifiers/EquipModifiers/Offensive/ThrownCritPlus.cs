@@ -1,6 +1,7 @@
 using Loot.Api.Core;
 using Loot.Modifiers.Base;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Loot.Modifiers.EquipModifiers.Offensive
 {
@@ -20,7 +21,7 @@ namespace Loot.Modifiers.EquipModifiers.Offensive
 
 		public override void UpdateEquip(Item item, Player player)
 		{
-			player.thrownCrit += (int) Properties.RoundedPower;
+			player.GetCritChance(DamageClass.Throwing) += (int) Properties.RoundedPower;
 		}
 	}
 }

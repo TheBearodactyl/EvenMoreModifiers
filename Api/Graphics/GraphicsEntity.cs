@@ -33,19 +33,19 @@ namespace Loot.Api.Graphics
 		{
 			if (subjectIdentity is ModItem modItem)
 			{
-				Entity = modItem.item;
+				Entity = modItem.Item;
 			}
 			else if (subjectIdentity is ModNPC modNpc)
 			{
-				Entity = modNpc.npc;
+				Entity = modNpc.NPC;
 			}
 			else if (subjectIdentity is ModProjectile modProjectile)
 			{
-				Entity = modProjectile.projectile;
+				Entity = modProjectile.Projectile;
 			}
 			else if (subjectIdentity is ModPlayer modPlayer)
 			{
-				Entity = modPlayer.player;
+				Entity = modPlayer.Player;
 			}
 			else if (subjectIdentity is Entity entity)
 			{

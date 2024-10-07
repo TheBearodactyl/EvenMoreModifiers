@@ -66,7 +66,7 @@ namespace Loot.Modifiers.Base
 			return Lang.GetBuffName(BuffType);
 		}
 
-		public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+		public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (Main.rand.NextFloat() < Properties.RoundedPower / 100f * BuffInflictionChance)
 			{
@@ -74,7 +74,7 @@ namespace Loot.Modifiers.Base
 			}
 		}
 
-		public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+		public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
 		{
 			if (Main.rand.NextFloat() < Properties.RoundedPower / 100f * BuffInflictionChance)
 			{

@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.UI;
 
@@ -17,7 +18,7 @@ namespace Loot.UI.Common.Controls.Button
 
 		internal GuiInteractableItemButton(ButtonType buttonType, int netId = 0, int stack = 0, Texture2D hintTexture = null, string hintText = null, string hintOnHover = null) : base(buttonType, netId, stack, hintTexture, hintText, hintOnHover)
 		{
-			OnClick += HandleClickAction;
+			OnLeftClick += HandleClickAction;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -51,7 +52,7 @@ namespace Loot.UI.Common.Controls.Button
 						// Play sound
 						if (j == 0)
 						{
-							Main.PlaySound(18, -1, -1, 1);
+							SoundEngine.PlaySound(SoundID.Coins);
 						}
 
 						// Mouseitem is air, clone item
@@ -129,7 +130,7 @@ namespace Loot.UI.Common.Controls.Button
 					// Only slot has an item
 					if (Main.mouseItem.IsAir)
 					{
-						Main.PlaySound(SoundID.Grab);
+						SoundEngine.PlaySound(SoundID.Grab);
 						Main.playerInventory = true;
 						if (TakeUserItemOnClick)
 						{
@@ -142,7 +143,7 @@ namespace Loot.UI.Common.Controls.Button
 					// Can take mouse item
 					else if (CanTakeItem(Main.mouseItem))
 					{
-						Main.PlaySound(SoundID.Grab);
+						SoundEngine.PlaySound(SoundID.Grab);
 						Main.playerInventory = true;
 						// Items are the same type
 						if (Item.type == Main.mouseItem.type)
@@ -188,7 +189,7 @@ namespace Loot.UI.Common.Controls.Button
 				// Slot can take mouse item
 				else if (CanTakeItem(Main.mouseItem))
 				{
-					Main.PlaySound(SoundID.Grab);
+					SoundEngine.PlaySound(SoundID.Grab);
 					Main.playerInventory = true;
 					ChangeItem(0, Main.mouseItem.Clone());
 					if (TakeUserItemOnClick)

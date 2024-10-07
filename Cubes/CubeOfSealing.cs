@@ -15,13 +15,13 @@ namespace Loot.Cubes
 
 		protected override void SafeStaticDefaults()
 		{
-			Tooltip.SetDefault("Allows sealing an item's modifiers" +
-							   "\nSealing modifiers means they cannot be changed");
+			/* Tooltip.SetDefault("Allows sealing an item's modifiers" +
+							   "\nSealing modifiers means they cannot be changed"); */
 		}
 
 		protected override void SafeDefaults()
 		{
-			item.value = Item.buyPrice(copper: 1);
+			Item.value = Item.buyPrice(copper: 1);
 		}
 
 		public override RollingStrategy GetRollingStrategy(Item item, RollingStrategyProperties properties)

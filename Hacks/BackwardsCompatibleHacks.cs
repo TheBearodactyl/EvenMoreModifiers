@@ -9,27 +9,27 @@ namespace Loot.Hacks
 	{
 		public sealed override bool NeedsSaving(Item item) => false;
 
-		public sealed override void Load(Item item, TagCompound tag)
+		public sealed override void LoadData(Item item, TagCompound tag)
 		{
-			LootModItem.GetInfo(item).Load(item, tag);
+			LootModItem.GetInfo(item).LoadData(item, tag);
 		}
 
-		public sealed override TagCompound Save(Item item)
+		public sealed override void SaveData(Item item, TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			return null;
 		}
 	}
 
-	internal sealed class EMMWorld : ModWorld
+	internal sealed class EMMWorld : ModSystem
 	{
-		public sealed override TagCompound Save()
+		public sealed override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			return null;
 		}
 
-		public sealed override void Load(TagCompound tag)
+		public sealed override void LoadWorldData(TagCompound tag)
 		{
-			ModContent.GetInstance<LootModWorld>().Load(tag);
+			ModContent.GetInstance<LootModWorld>().LoadWorldData(tag);
 		}
 	}
 }

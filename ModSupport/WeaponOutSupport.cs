@@ -20,8 +20,8 @@ namespace Loot.ModSupport
 
 		public override void AddClientSupport(Mod mod)
 		{
-			On.Terraria.Main.DrawPlayer += MainOnDrawPlayer;
-			On.Terraria.DataStructures.DrawData.Draw += DrawDataOnDraw;
+			Terraria.On_Main.DrawPlayer += MainOnDrawPlayer;
+			Terraria.DataStructures.On_DrawData.Draw += DrawDataOnDraw;
 			mod.Call("AddCustomPreDrawMethod", (Func<Player, Item, DrawData, bool>)CustomPreDraw);
 		}
 
@@ -30,7 +30,7 @@ namespace Loot.ModSupport
 		/// <para>This ensures cached data resets for each player</para>
 		/// <para>It works because Terraria draws one player at a time, so cached data is from one player</para>
 		/// </summary>
-		private void MainOnDrawPlayer(On.Terraria.Main.orig_DrawPlayer orig, Main self, Player drawplayer, Vector2 position, float rotation, Vector2 rotationorigin, float shadow)
+		private void MainOnDrawPlayer(Terraria.On_Main.orig_DrawPlayer orig, Main self, Player drawplayer, Vector2 position, float rotation, Vector2 rotationorigin, float shadow)
 		{
 			_lightColor = null;
 			_cache.Clear();
@@ -42,7 +42,7 @@ namespace Loot.ModSupport
 		/// <para>If held weapon is a fist and the DrawData matches, call <see cref="DrawWeaponOutFists"/></para>
 		/// <para>If the DrawData was cached, it came from WeaponOut and call <see cref="DrawWeaponOutFromCache"/></para>
 		/// </summary>
-		private void DrawDataOnDraw(On.Terraria.DataStructures.DrawData.orig_Draw orig, ref DrawData self, SpriteBatch sb)
+		private void DrawDataOnDraw(Terraria.DataStructures.On_DrawData.orig_Draw orig, ref DrawData self, SpriteBatch sb)
 		{
 			_lightColor = _lightColor ?? Lighting.GetColor((int)(Main.LocalPlayer.MountedCenter.X / 16), (int)(Main.LocalPlayer.MountedCenter.Y / 16));
 			if (!DrawWeaponOutFists(self, sb) && !DrawWeaponOutFromCache(self, sb))

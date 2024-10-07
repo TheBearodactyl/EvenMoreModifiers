@@ -43,7 +43,7 @@ namespace Loot.UI.Common.Controls.Button
 
 		public override void OnInitialize()
 		{
-			OnClick += (evt, element) =>
+			OnLeftClick += (evt, element) =>
 			{
 				if (CanBeClicked)
 				{
@@ -68,7 +68,7 @@ namespace Loot.UI.Common.Controls.Button
 					// the UI frame causing vanilla mouse behavior to not register
 					if (Main.mouseLeft && Main.mouseLeftRelease)
 					{
-						Click(new UIMouseEvent(this, Main.MouseScreen));
+						LeftClick(new UIMouseEvent(this, Main.MouseScreen));
 					}
 				}
 			}

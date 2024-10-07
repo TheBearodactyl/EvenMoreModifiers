@@ -13,16 +13,16 @@ namespace Loot.Cubes
 		protected override string CubeName => "Resonating Temple Cube";
 		protected override Color? OverrideNameColor => Color.PeachPuff;
 
-		protected override TooltipLine ExtraTooltip => new TooltipLine(mod, "BlackCube::Description::Add_Box",
+		protected override TooltipLine ExtraTooltip => new TooltipLine(Mod, "BlackCube::Description::Add_Box",
 			"Resonates with power\n" +
 			"Does nothing special for now")
 		{
-			overrideColor = OverrideNameColor
+			OverrideColor = OverrideNameColor
 		};
 
 		protected override void SafeDefaults()
 		{
-			item.value = Item.buyPrice(copper: 1);
+			Item.value = Item.buyPrice(copper: 1);
 		}
 
 		protected override void SafeStaticDefaults()

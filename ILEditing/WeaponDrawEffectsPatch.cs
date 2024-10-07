@@ -3,6 +3,7 @@ using Loot.Api.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 
 namespace Loot.ILEditing
 {
@@ -14,16 +15,16 @@ namespace Loot.ILEditing
 		public override void Apply(bool dedServ)
 		{
 			if (!dedServ)
-				On.Terraria.DataStructures.DrawData.Draw += DrawDataOnDraw;
+				Terraria.DataStructures.On_DrawData.Draw += DrawDataOnDraw;
 		}
 
-		private void DrawDataOnDraw(On.Terraria.DataStructures.DrawData.orig_Draw orig, ref DrawData self, SpriteBatch sb)
+		private void DrawDataOnDraw(Terraria.DataStructures.On_DrawData.orig_Draw orig, ref DrawData self, SpriteBatch sb)
 		{
 			//bool weaponOutCheck = Main.LocalPlayer.HeldItem.modItem?.mod is Mod mod && mod.Name.Equals("WeaponOut") && Main.LocalPlayer.controlUseItem || (Main.mouseLeft || Main.mouseRight);
 			if (!Main.LocalPlayer.frozen
 				&& (Main.LocalPlayer.itemAnimation > 0 && Main.LocalPlayer.HeldItem.useStyle != 0 || Main.LocalPlayer.HeldItem.holdStyle > 0 && !Main.LocalPlayer.pulley) // || weaponOutCheck
 				&& Main.LocalPlayer.HeldItem.type > 0 && !Main.LocalPlayer.dead && !Main.LocalPlayer.HeldItem.noUseGraphic && (!Main.LocalPlayer.wet || !Main.LocalPlayer.HeldItem.noWet)
-				&& Main.itemTexture[Main.LocalPlayer.HeldItem.type] == self.texture)
+				&& TextureAssets.Item[Main.LocalPlayer.HeldItem.type].Value == self.texture)
 			{
 				var info = GraphicsGlobalItem.GetInfo(Main.LocalPlayer.HeldItem);
 				if (!DrawShaderEntities(info, self, sb) && !DrawGlowmaskEntities(info, self, sb))

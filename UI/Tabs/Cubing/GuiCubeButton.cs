@@ -15,12 +15,12 @@ namespace Loot.UI.Tabs.Cubing
 
 		public override bool CanTakeItem(Item givenItem)
 		{
-			return givenItem.modItem is MagicalCube;
+			return givenItem.ModItem is MagicalCube;
 		}
 
 		public override RollingStrategy GetRollingStrategy(Item item, RollingStrategyProperties rollingStrategyProperties)
 		{
-			return ((RerollingCube) Item.modItem)?.GetRollingStrategy(item, rollingStrategyProperties) ?? RollingUtils.Strategies.Default;
+			return ((RerollingCube) Item.ModItem)?.GetRollingStrategy(item, rollingStrategyProperties) ?? RollingUtils.Strategies.Default;
 		}
 	}
 }

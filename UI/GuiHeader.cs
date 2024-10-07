@@ -3,6 +3,7 @@ using Loot.UI.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI;
 
 namespace Loot.UI
@@ -46,13 +47,13 @@ namespace Loot.UI
 			);
 
 			var textPos = GetOuterDimensions().Center();
-			var measure = Main.fontMouseText.MeasureString(_headerText);
+			var measure = FontAssets.MouseText.Value.MeasureString(_headerText);
 			textPos.X -= measure.X * 0.5f;
 			textPos.Y -= measure.Y * 0.3725f;
 
 			Utils.DrawBorderStringFourWay(
 				spriteBatch,
-				Main.fontMouseText,
+				FontAssets.MouseText.Value,
 				_headerText,
 				textPos.X,
 				textPos.Y,

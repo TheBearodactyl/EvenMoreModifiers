@@ -2,6 +2,7 @@ using System;
 using Loot.Api.Core;
 using Loot.Modifiers.Base;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Loot.Modifiers.WeaponModifiers
 {
@@ -21,10 +22,10 @@ namespace Loot.Modifiers.WeaponModifiers
 
 		public override bool CanRoll(ModifierContext ctx)
 		{
-			return base.CanRoll(ctx) && !ctx.Item.summon;
+			return base.CanRoll(ctx) && !ctx.Item.CountsAsClass(DamageClass.Summon);
 		}
 
-		public override void GetWeaponCrit(Item item, Player player, ref int crit)
+		public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
 		{
 			crit = (int) Math.Min(100, crit + Properties.RoundedPower);
 		}

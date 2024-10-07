@@ -23,7 +23,7 @@ namespace Loot.Modifiers.WeaponModifiers.Ice
 				.IsUniqueModifier(true);
 		}
 
-		public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+		public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			target.AddBuff(BuffID.Frostburn, (int) (Properties.Power * 60));
 		}

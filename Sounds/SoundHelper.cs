@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 
 namespace Loot.Sounds
@@ -23,7 +24,7 @@ namespace Loot.Sounds
 
 		internal static void PlayCustomSound(SoundType type)
 		{
-			Main.PlaySound(SoundLoader.customSoundType, -1, -1,
+			SoundEngine.PlaySound(SoundLoader.customSoundType, -1, -1,
 				Loot.Instance.GetSoundSlot(
 					Terraria.ModLoader.SoundType.Custom,
 					"Sounds/Custom/" + Enum.GetName(typeof(SoundType), type)));

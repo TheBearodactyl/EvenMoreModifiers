@@ -12,6 +12,8 @@ using Loot.UI.Common.Controls.Panel;
 using Loot.UI.Tabs.Cubing;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -118,7 +120,7 @@ namespace Loot.UI.Tabs.CraftingTab
 
 			Texture2D craftTexture = ModContent.GetTexture("Terraria/UI/Craft_Toggle_3");
 			_craftButton = new GuiImageButton(GuiButton.ButtonType.StoneOuterBevel, craftTexture);
-			_craftButton.OnClick += (evt, element) =>
+			_craftButton.OnLeftClick += (evt, element) =>
 			{
 				ComponentSelector.CalculateAvailableComponents(ItemButton.Item);
 				if (!ComponentSelector.IsAvailable(ComponentButton.Item.type))
@@ -144,7 +146,7 @@ namespace Loot.UI.Tabs.CraftingTab
 
 		private bool CraftRequirementsMet()
 		{
-			return ComponentButton.Link?.Component.modItem is MagicalCube
+			return ComponentButton.Link?.Component.ModItem is MagicalCube
 						 && ItemButton.CanTakeItem(ItemButton.Item)
 						 && ComponentButton.CanTakeItem(ComponentButton.Item)
 						 && IsStrategyAllowed();
@@ -226,7 +228,7 @@ namespace Loot.UI.Tabs.CraftingTab
 			var clone = new Item();
 			clone.netDefaults(toClone.type);
 			// Clone to preserve modded data
-			clone = clone.CloneWithModdedDataFrom(ItemButton.Item);
+			clone = clone.CloneWithModdedDataFrom(ItemButton.Item)/* tModPorter Note: Removed. Use Clone, ResetPrefix or Refresh */;
 			// Restore prefix
 			if (ItemButton.Item.prefix > 0)
 			{
@@ -242,7 +244,7 @@ namespace Loot.UI.Tabs.CraftingTab
 			ItemButton.ChangeItem(0, newItem.Clone());
 			LootModItem.GetInfo(ItemButton.Item).SlottedInUI = true;
 			UpdateModifiersInGui();
-			Main.PlaySound(SoundID.Grab);
+			SoundEngine.PlaySound(SoundID.Grab);
 		}
 
 		private void UpdateModifiersInGui()
@@ -269,11 +271,11 @@ namespace Loot.UI.Tabs.CraftingTab
 			{
 				string line = lines.Aggregate("", (current, tooltipLine) => current + $"{tooltipLine.Text} ");
 				line = line.TrimEnd();
-				var measure = Main.fontMouseText.MeasureString(line);
+				var measure = FontAssets.MouseText.Value.MeasureString(line);
 				if (measure.X >= _modifierPanels[i].Width.Pixels + SPACING * 4)
 				{
 					_modifierPanels[i].SetHoverText(line);
-					line = Main.fontMouseText.CreateWrappedText(line, _modifierPanels[i].Width.Pixels)
+					line = FontAssets.MouseText.Value.CreateWrappedText(line, _modifierPanels[i].Width.Pixels)
 						.Split('\n')[0] + "...";
 				}
 				else

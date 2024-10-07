@@ -39,7 +39,7 @@ namespace Loot.Api.Core
 
 		public ModifierDelegatorPlayer DelegatorPlayer { get; internal set; }
 
-		public new Player player => DelegatorPlayer.player;
+		public new Player player => DelegatorPlayer.Player;
 
 		/// <summary>
 		/// Keeps track of if this particular modifier is being delegated or not
@@ -96,7 +96,7 @@ namespace Loot.Api.Core
 			{
 				try
 				{
-					kvp.Key.Invoke(this, new object[] { delegatorPlayer.player });
+					kvp.Key.Invoke(this, new object[] { delegatorPlayer.Player });
 				}
 				catch (Exception e)
 				{
@@ -131,11 +131,11 @@ namespace Loot.Api.Core
 			return clone;
 		}
 
-		public sealed override bool Autoload(ref string name)
+		public sealed override bool IsLoadingEnabled(Mod mod)/* tModPorter Suggestion: If you return false for the purposes of manual loading, use the [Autoload(false)] attribute on your class instead */
 			=> false;
-		public override bool CloneNewInstances
+		protected override bool CloneNewInstances
 			=> false;
-		public sealed override void Load(TagCompound tag)
+		public sealed override void LoadData(TagCompound tag)
 		{
 		}
 		public sealed override void LoadLegacy(BinaryReader reader)
@@ -144,11 +144,11 @@ namespace Loot.Api.Core
 		public sealed override void PreSaveCustomData()
 		{
 		}
-		public sealed override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+		public sealed override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)/* tModPorter Suggestion: Return an Item array to add to the players starting items. Use ModifyStartingInventory for modifying them if needed */
 		{
 		}
 		[Obsolete("SetupStartInventory now has an overload with a mediumcoreDeath bool argument, please use that.")]
-		public sealed override void SetupStartInventory(IList<Item> items)
+		public sealed override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)/* tModPorter Suggestion: Return an Item array to add to the players starting items. Use ModifyStartingInventory for modifying them if needed */
 		{
 		}
 		public override void PreSavePlayer()
@@ -176,20 +176,20 @@ namespace Loot.Api.Core
 		public sealed override void ReceiveCustomBiomes(BinaryReader reader)
 		{
 		}
-		public sealed override void clientClone(ModPlayer clientClone)
+		public sealed override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
 		{
 		}
 		public sealed override Texture2D GetMapBackgroundImage()
 		{
 			return base.GetMapBackgroundImage();
 		}
-		public sealed override void PlayerConnect(Player player)
+		public sealed override void PlayerConnect()
 		{
 		}
-		public sealed override void PlayerDisconnect(Player player)
+		public sealed override void PlayerDisconnect()
 		{
 		}
-		public sealed override void OnEnterWorld(Player player)
+		public sealed override void OnEnterWorld()
 		{
 		}
 		public sealed override bool ShiftClickSlot(Item[] inventory, int context, int slot)

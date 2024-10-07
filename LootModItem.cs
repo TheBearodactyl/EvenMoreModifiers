@@ -26,7 +26,7 @@ namespace Loot
 		public static List<Modifier> GetActivePool(Item item) => GetInfo(item).Modifiers?.Modifiers ?? new List<Modifier>();
 
 		public override bool InstancePerEntity => true;
-		public override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 
 		public ModifierRarity Rarity { get; internal set; } // the current rarity
 		public FiniteModifierPool Modifiers { get; internal set; } // the current pool of mods.
@@ -46,8 +46,8 @@ namespace Loot
 
 		private void InvalidateRolls()
 		{
-			Rarity = mod.GetNullModifierRarity();
-			Modifiers = mod.GetNullModifierPool();
+			Rarity = Mod.GetNullModifierRarity();
+			Modifiers = Mod.GetNullModifierPool();
 		}
 
 		/// <summary>
@@ -165,13 +165,13 @@ namespace Loot
 		public override GlobalItem Clone(Item item, Item itemClone)
 		{
 			LootModItem clone = (LootModItem)base.Clone(item, itemClone);
-			clone.Rarity = (ModifierRarity)Rarity?.Clone() ?? mod.GetNullModifierRarity();
-			clone.Modifiers = (FiniteModifierPool)Modifiers?.Clone() ?? mod.GetNullModifierPool();
+			clone.Rarity = (ModifierRarity)Rarity?.Clone() ?? Mod.GetNullModifierRarity();
+			clone.Modifiers = (FiniteModifierPool)Modifiers?.Clone() ?? Mod.GetNullModifierPool();
 			// there is no need to apply here, we already cloned the item which stats are already modified by its pool
 			return clone;
 		}
 
-		public override void Load(Item item, TagCompound tag)
+		public override void LoadData(Item item, TagCompound tag)
 		{
 			// enforce illegitimate rolls to go away (needed for earliest versions saves)
 			if (!item.IsModifierRollableItem())
@@ -197,7 +197,7 @@ namespace Loot
 			}
 		}
 
-		public override TagCompound Save(Item item)
+		public override void SaveData(Item item, TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			TagCompound tag = new TagCompound
 			{
@@ -358,7 +358,7 @@ namespace Loot
 				// this is because our mods modify the stats, which was never intended by vanilla, causing the differences to be innacurate and bugged
 
 				// RECALC START
-				var vanillaTooltips = tooltips.Where(x => x.mod.Equals("Terraria")).ToArray();
+				var vanillaTooltips = tooltips.Where(x => x.Mod.Equals("Terraria")).ToArray();
 				var baseItem = new Item();
 				baseItem.netDefaults(item.netID);
 
@@ -375,10 +375,10 @@ namespace Loot
 					foreach (var tooltipLine in vanillaTooltips)
 					{
 						double outNumber = 0d;
-						string newTooltipLine = tooltipLine.text;
-						Color? newColor = tooltipLine.overrideColor;
+						string newTooltipLine = tooltipLine.Text;
+						Color? newColor = tooltipLine.OverrideColor;
 						string tooltipEndText =
-							new string(tooltipLine.text
+							new string(tooltipLine.Text
 								.Reverse()
 								.TakeWhile(x => !char.IsDigit(x))
 								.Reverse()
@@ -455,7 +455,7 @@ namespace Loot
 							continue;
 						}
 
-						int ttlI = tooltips.FindIndex(x => x.mod.Equals(tooltipLine.mod) && x.Name.Equals(tooltipLine.Name));
+						int ttlI = tooltips.FindIndex(x => x.Mod.Equals(tooltipLine.Mod) && x.Name.Equals(tooltipLine.Name));
 						if (ttlI == -1)
 						{
 							continue;
@@ -467,8 +467,8 @@ namespace Loot
 						}
 						else
 						{
-							tooltips[ttlI].text = $"{newTooltipLine}{tooltipEndText}";
-							tooltips[ttlI].overrideColor = newColor;
+							tooltips[ttlI].Text = $"{newTooltipLine}{tooltipEndText}";
+							tooltips[ttlI].OverrideColor = newColor;
 						}
 					}
 				}
@@ -482,24 +482,24 @@ namespace Loot
 				// RECALC END
 
 				// Modifies the tooltips, to insert generic mods data
-				int i = tooltips.FindIndex(x => x.mod == "Terraria" && x.Name == "ItemName");
+				int i = tooltips.FindIndex(x => x.Mod == "Terraria" && x.Name == "ItemName");
 				if (i != -1)
 				{
 					var namelayer = tooltips[i];
 
 					if (Rarity.ItemPrefix != null)
 					{
-						namelayer.text = $"{Rarity.ItemPrefix} {namelayer.text}";
+						namelayer.Text = $"{Rarity.ItemPrefix} {namelayer.Text}";
 					}
 
 					if (Rarity.ItemSuffix != null)
 					{
-						namelayer.text = $"{namelayer.text} {Rarity.ItemSuffix}";
+						namelayer.Text = $"{namelayer.Text} {Rarity.ItemSuffix}";
 					}
 
 					if (Rarity.OverrideNameColor != null)
 					{
-						namelayer.overrideColor = Rarity.OverrideNameColor;
+						namelayer.OverrideColor = Rarity.OverrideNameColor;
 					}
 
 					tooltips[i] = namelayer;
@@ -514,9 +514,9 @@ namespace Loot
 				if (!(Rarity is NullModifierRarity))
 				{
 					i = tooltips.Count;
-					tooltips.Insert(i, new TooltipLine(mod, "Loot: Modifier:Rarity", $"[{Rarity.RarityName}]{(isVanityIgnored ? " [IGNORED]" : "")}")
+					tooltips.Insert(i, new TooltipLine(Mod, "Loot: Modifier:Rarity", $"[{Rarity.RarityName}]{(isVanityIgnored ? " [IGNORED]" : "")}")
 					{
-						overrideColor = inactiveColor ?? Rarity.Color * Main.inventoryScale
+						OverrideColor = inactiveColor ?? Rarity.Color * Main.inventoryScale
 					});
 				}
 
@@ -526,18 +526,18 @@ namespace Loot
 				{
 					foreach (var tt in modifier.GetTooltip().Build())
 					{
-						tooltips.Insert(++i, new TooltipLine(mod, $"Loot: Modifier:Line:{i}", $"{modifier.GetFormattedUniqueName()} {tt.Text}".TrimStart())
+						tooltips.Insert(++i, new TooltipLine(Mod, $"Loot: Modifier:Line:{i}", $"{modifier.GetFormattedUniqueName()} {tt.Text}".TrimStart())
 						{
-							overrideColor = inactiveColor ?? (tt.Color ?? Color.White) * Main.inventoryScale
+							OverrideColor = inactiveColor ?? (tt.Color ?? Color.White) * Main.inventoryScale
 						});
 					}
 				}
 
 				if (SealedModifiers)
 				{
-					var ttl = new TooltipLine(mod, "Loot: Modifier:Sealed", "Modifiers cannot be changed")
+					var ttl = new TooltipLine(Mod, "Loot: Modifier:Sealed", "Modifiers cannot be changed")
 					{
-						overrideColor = inactiveColor ?? Color.Cyan
+						OverrideColor = inactiveColor ?? Color.Cyan
 					};
 					tooltips.Insert(++i, ttl);
 				}

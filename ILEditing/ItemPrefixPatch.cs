@@ -13,7 +13,7 @@ namespace Loot.ILEditing
 	{
 		public override void Apply(bool dedServ)
 		{
-			IL.Terraria.Item.Prefix += ItemOnPrefix;
+			Terraria.IL_Item.Prefix += ItemOnPrefix;
 		}
 
 		private void ItemOnPrefix(ILContext il)

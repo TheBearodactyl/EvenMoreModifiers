@@ -25,14 +25,14 @@ namespace Loot.UI.Common.Core
 				_offsets.Add(dragger, Vector2.Zero);
 			}
 
-			dragger.OnMouseDown += (evt, element) =>
+			dragger.OnLeftMouseDown += (evt, element) =>
 			{
 				//start
 				_offsets[dragger] = new Vector2(evt.MousePosition.X - draggable.Left.Pixels, evt.MousePosition.Y - draggable.Top.Pixels);
 				_dragging++;
 			};
 
-			dragger.OnMouseUp += (evt, element) =>
+			dragger.OnLeftMouseUp += (evt, element) =>
 			{
 				//end
 				Vector2 end = evt.MousePosition;

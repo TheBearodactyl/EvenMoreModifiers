@@ -129,9 +129,9 @@ namespace Loot.Api.Core
 		}
 
 		// Never autoload us
-		public sealed override bool Autoload(ref string name) => false;
+		public sealed override bool IsLoadingEnabled(Mod mod)/* tModPorter Suggestion: If you return false for the purposes of manual loading, use the [Autoload(false)] attribute on your class instead */ => false;
 		public sealed override bool InstancePerEntity => true;
-		public sealed override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 
 		public sealed override void SetDefaults(Item item)
 		{
@@ -147,7 +147,7 @@ namespace Loot.Api.Core
 		// The following hooks aren't applicable in instanced context, so we seal them here so they can't be used	
 		public sealed override GlobalItem Clone(Item item, Item itemClone) => base.Clone(item, itemClone);
 
-		public sealed override void ExtractinatorUse(int extractType, ref int resultType, ref int resultStack)
+		public sealed override void ExtractinatorUse(int extractType, int extractinatorBlockType, ref int resultType, ref int resultStack)
 		{
 		}
 
@@ -175,18 +175,18 @@ namespace Loot.Api.Core
 		{
 		}
 
-		public sealed override bool DrawBody(int body) => base.DrawBody(body);
+		public sealed override bool DrawBody(int body)/* tModPorter Note: Removed. In SetStaticDefaults, use ArmorIDs.Body.Sets.HidesTopSkin[body] = true if you returned false */ => base.DrawBody(body);
 
-		public sealed override void DrawHair(int head, ref bool drawHair, ref bool drawAltHair)
+		public sealed override void DrawHair(int head, ref bool drawHair, ref bool drawAltHair)/* tModPorter Note: Removed. In SetStaticDefaults, use ArmorIDs.Head.Sets.DrawFullHair[head] = true if you had drawHair set to true, and ArmorIDs.Head.Sets.DrawHatHair[head] = true if you had drawAltHair set to true */
 		{
 		}
 
-		public sealed override void DrawHands(int body, ref bool drawHands, ref bool drawArms)
+		public sealed override void DrawHands(int body, ref bool drawHands, ref bool drawArms)/* tModPorter Note: Removed. In SetStaticDefaults, use ArmorIDs.Body.Sets.HidesHands[body] = false if you had drawHands set to true. If you had drawArms set to true, you don't need to do anything */
 		{
 		}
 
-		public sealed override bool DrawHead(int head) => base.DrawHead(head);
-		public sealed override bool DrawLegs(int legs, int shoes) => base.DrawLegs(legs, shoes);
+		public sealed override bool DrawHead(int head)/* tModPorter Note: Removed. In SetStaticDefaults, use ArmorIDs.Head.Sets.DrawHead[head] = false if you returned false */ => base.DrawHead(head);
+		public sealed override bool DrawLegs(int legs, int shoes)/* tModPorter Note: Removed. In SetStaticDefaults, use ArmorIDs.Legs.Sets.HidesBottomSkin[legs] = true, and ArmorIDs.Shoe.Sets.OverridesLegs[shoes] = true */ => base.DrawLegs(legs, shoes);
 		public sealed override Vector2? HoldoutOffset(int type) => base.HoldoutOffset(type);
 		public sealed override Vector2? HoldoutOrigin(int type) => base.HoldoutOrigin(type);
 		public sealed override bool IsAnglerQuestAvailable(int type) => base.IsAnglerQuestAvailable(type);
@@ -213,7 +213,7 @@ namespace Loot.Api.Core
 		}
 
 		// If modders wish to save/load data, they should use our custom save and load hooks
-		public sealed override TagCompound Save(Item item) => base.Save(item);
+		public sealed override void SaveData(Item item, TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */ => base.SaveData(item);
 
 		public sealed override void SetMatch(int armorSlot, int type, bool male, ref int equipSlot, ref bool robes)
 		{

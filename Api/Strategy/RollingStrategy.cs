@@ -5,6 +5,7 @@ using Loot.Api.Delegators;
 using Loot.Api.Graphics;
 using Loot.Modifiers.EquipModifiers.Utility;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Utilities;
 
@@ -46,7 +47,7 @@ namespace Loot.Api.Strategy
 
 		public virtual void PlaySoundEffect(Item item)
 		{
-			Main.PlaySound(SoundID.Item37, -1, -1);
+			SoundEngine.PlaySound(SoundID.Item37);
 		}
 
 		public virtual List<Modifier> Roll(List<Modifier> currentModifiers, ModifierPool drawPool, ModifierContext modifierContext, RollingStrategyProperties properties)

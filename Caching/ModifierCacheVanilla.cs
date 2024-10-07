@@ -9,10 +9,10 @@ namespace Loot.Caching
 		private void UpdateVanityCache()
 		{
 			// vanity
-			for (int i = 13; i < 18 + player.extraAccessorySlots; i++)
+			for (int i = 13; i < 18 + Player.extraAccessorySlots; i++)
 			{
 				var oldEquip = _oldVanityEquips[i - 13];
-				var newEquip = player.armor[i];
+				var newEquip = Player.armor[i];
 
 				// If equip slot needs an update
 				if (!_forceEquipUpdate && oldEquip != null && newEquip == oldEquip)
@@ -45,13 +45,13 @@ namespace Loot.Caching
 		private void UpdateHeldItemCache()
 		{
 			// If held item needs an update
-			if (_oldSelectedItem == player.selectedItem)
+			if (_oldSelectedItem == Player.selectedItem)
 				return;
 
 			Ready = false;
 
 			// detach old held item
-			Item oldSelectedItem = player.inventory[_oldSelectedItem];
+			Item oldSelectedItem = Player.inventory[_oldSelectedItem];
 			if (oldSelectedItem != null && !oldSelectedItem.IsAir && IsMouseUsable(oldSelectedItem))
 			{
 				foreach (Modifier m in LootModItem.GetActivePool(oldSelectedItem))
@@ -61,15 +61,15 @@ namespace Loot.Caching
 			}
 
 			// attach new held item
-			if (player.HeldItem != null && !player.HeldItem.IsAir && IsMouseUsable(player.HeldItem))
+			if (Player.HeldItem != null && !Player.HeldItem.IsAir && IsMouseUsable(Player.HeldItem))
 			{
-				foreach (Modifier m in LootModItem.GetActivePool(player.HeldItem))
+				foreach (Modifier m in LootModItem.GetActivePool(Player.HeldItem))
 				{
-					AddAttachItem(player.HeldItem, m);
+					AddAttachItem(Player.HeldItem, m);
 				}
 			}
 
-			_oldSelectedItem = player.selectedItem;
+			_oldSelectedItem = Player.selectedItem;
 		}
 
 		private bool UpdateMouseItemCache()
@@ -92,7 +92,7 @@ namespace Loot.Caching
 			// attach new held item
 			if (Main.mouseItem != null && !Main.mouseItem.IsAir && IsMouseUsable(Main.mouseItem))
 			{
-				foreach (Modifier m in LootModItem.GetActivePool(player.HeldItem))
+				foreach (Modifier m in LootModItem.GetActivePool(Player.HeldItem))
 				{
 					AddAttachItem(Main.mouseItem, m);
 				}
@@ -104,10 +104,10 @@ namespace Loot.Caching
 
 		private void UpdateEquipsCache()
 		{
-			for (int i = 0; i < 8 + player.extraAccessorySlots; i++)
+			for (int i = 0; i < 8 + Player.extraAccessorySlots; i++)
 			{
 				var oldEquip = _oldEquips[i];
-				var newEquip = player.armor[i];
+				var newEquip = Player.armor[i];
 
 				// If equip slot needs an update
 				if (!_forceEquipUpdate && oldEquip != null && newEquip == oldEquip)

@@ -24,7 +24,7 @@ namespace Loot.Modifiers.WeaponModifiers
 			return base.CanRoll(ctx) && ctx.Item.useAmmo > 0;
 		}
 
-		public override bool ConsumeAmmo(Item item, Player player)
+		public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
 		{
 			return Main.rand.NextFloat() > Properties.RoundedPower / 100;
 		}

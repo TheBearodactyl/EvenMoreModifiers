@@ -4,6 +4,7 @@ using Loot.Ext;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 
 namespace Loot.Api.Graphics.Shader
@@ -37,7 +38,7 @@ namespace Loot.Api.Graphics.Shader
 
 			if (SubjectTexture == null)
 			{
-				SubjectTexture = Main.itemTexture[item.type];
+				SubjectTexture = TextureAssets.Item[item.type].Value;
 			}
 
 			if (ShaderTexture == null)

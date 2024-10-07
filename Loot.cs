@@ -39,7 +39,7 @@ namespace Loot
 			LoadingFunneler.Load();
 		}
 
-		public override void PostAddRecipes()
+		public override void PostAddRecipes()/* tModPorter Note: Removed. Use ModSystem.PostAddRecipes */
 		{
 			LoadingFunneler.PostLoad();
 		}
@@ -50,7 +50,7 @@ namespace Loot
 			Instance = null;
 		}
 
-		public override void PreSaveAndQuit()
+		public override void PreSaveAndQuit()/* tModPorter Note: Removed. Use ModSystem.PreSaveAndQuit */
 		{
 			if (GuiState.Visible)
 			{
@@ -60,7 +60,7 @@ namespace Loot
 
 		private GameTime _lastUpdateUiGameTime;
 
-		public override void UpdateUI(GameTime gameTime)
+		public override void UpdateUI(GameTime gameTime)/* tModPorter Note: Removed. Use ModSystem.UpdateUI */
 		{
 			_lastUpdateUiGameTime = gameTime;
 			if (GuiInterface?.CurrentState != null)
@@ -69,7 +69,7 @@ namespace Loot
 			}
 		}
 
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)/* tModPorter Note: Removed. Use ModSystem.ModifyInterfaceLayers */
 		{
 			int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 			if (mouseTextIndex != -1)

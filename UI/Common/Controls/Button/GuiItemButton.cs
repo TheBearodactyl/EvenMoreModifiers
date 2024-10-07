@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI;
 
 namespace Loot.UI.Common.Controls.Button
@@ -72,7 +73,7 @@ namespace Loot.UI.Common.Controls.Button
 			}
 			else
 			{
-				texture2D = Main.itemTexture[Item.type];
+				texture2D = TextureAssets.Item[Item.type].Value;
 				drawColor = DrawColor ?? Item.GetAlpha(Color.White);
 				if (IsMouseHovering)
 				{
@@ -85,7 +86,7 @@ namespace Loot.UI.Common.Controls.Button
 						Main.hoverItemName = Item.Name;
 						Main.HoverItem = Item.Clone();
 						Main.HoverItem.SetNameOverride(
-							$"{Main.HoverItem.Name}{Main.HoverItem.modItem?.mod.Name.Insert((int)Main.HoverItem.modItem?.mod.Name.Length, "]").Insert(0, " [")}{HintOnHover ?? ""}");
+							$"{Main.HoverItem.Name}{Main.HoverItem.ModItem?.Mod.Name.Insert((int)Main.HoverItem.ModItem?.Mod.Name.Length, "]").Insert(0, " [")}{HintOnHover ?? ""}");
 					}
 				}
 			}
@@ -125,8 +126,8 @@ namespace Loot.UI.Common.Controls.Button
 			drawPosition.Y += innerDimensions.Height * 1f / 2f - frame.Height * drawScale / 2f;
 
 			// TODO globalitem Pre and Post draws?
-			if (Item.modItem == null
-				|| Item.modItem.PreDrawInInventory(spriteBatch, drawPosition, frame, drawColor, drawColor, Vector2.Zero, drawScale))
+			if (Item.ModItem == null
+				|| Item.ModItem.PreDrawInInventory(spriteBatch, drawPosition, frame, drawColor, drawColor, Vector2.Zero, drawScale))
 			{
 				spriteBatch.Draw(texture2D, drawPosition, frame, drawColor, 0f,
 					Vector2.Zero, drawScale, SpriteEffects.None, 0f);
@@ -138,7 +139,7 @@ namespace Loot.UI.Common.Controls.Button
 				}
 			}
 
-			Item.modItem?.PostDrawInInventory(spriteBatch, drawPosition, frame, drawColor, drawColor, Vector2.Zero, drawScale);
+			Item.ModItem?.PostDrawInInventory(spriteBatch, drawPosition, frame, drawColor, drawColor, Vector2.Zero, drawScale);
 
 			if (!DrawStack || !(Item?.stack >= ShowStackFrom))
 			{

@@ -12,9 +12,9 @@ namespace Loot.Api.Cubes
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault(CubeName);
-			Tooltip.SetDefault(@"Can reroll the magical properties of an item
-There only seems to be use for this item at a specific workbench");
+			// DisplayName.SetDefault(CubeName);
+			/* Tooltip.SetDefault(@"Can reroll the magical properties of an item
+There only seems to be use for this item at a specific workbench"); */
 			SafeStaticDefaults();
 		}
 

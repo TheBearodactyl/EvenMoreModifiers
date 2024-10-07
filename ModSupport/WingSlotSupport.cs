@@ -77,7 +77,7 @@ namespace Loot.ModSupport
 					|| !(ui.GetCurrentTab() is ICraftingTab tab))
 					return;
 
-				if (RightClickFunctionalityRequirements(item) && !(item.modItem is MagicalCube) && ui.Visible && tab.AcceptsItem(item))
+				if (RightClickFunctionalityRequirements(item) && !(item.ModItem is MagicalCube) && ui.Visible && tab.AcceptsItem(item))
 				{
 					SwapItems(tab, item);
 					// else // item has innate right click or mod allows it, do nothing
@@ -96,8 +96,8 @@ namespace Loot.ModSupport
 				    || LootModItem.GetInfo(item).SlottedInUI)
 					return;
 
-				var i = tooltips.FindIndex(x => x.mod.Equals("Terraria") && x.Name.Equals("ItemName"));
-				if (i != -1) tooltips[i].text += " (control right click to slot into UI)";
+				var i = tooltips.FindIndex(x => x.Mod.Equals("Terraria") && x.Name.Equals("ItemName"));
+				if (i != -1) tooltips[i].Text += " (control right click to slot into UI)";
 			}
 		}
 	}

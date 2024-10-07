@@ -19,9 +19,9 @@ namespace Loot.Api.Cubes
 
 		public sealed override void SetDefaults()
 		{
-			item.Size = new Vector2(36);
-			item.maxStack = 999;
-			item.consumable = false;
+			Item.Size = new Vector2(36);
+			Item.maxStack = 999;
+			Item.consumable = false;
 			SafeDefaults();
 		}
 
@@ -42,14 +42,14 @@ namespace Loot.Api.Cubes
 		{
 			base.ModifyTooltips(tooltips);
 
-			var tts = tooltips.Where(x => x.mod.Equals("Terraria"));
+			var tts = tooltips.Where(x => x.Mod.Equals("Terraria"));
 
 			if (OverrideNameColor != null)
 			{
 				var itemName = tts.FirstOrDefault(x => x.Name.Equals("ItemName"));
 				if (itemName != null)
 				{
-					itemName.overrideColor = OverrideNameColor.Value;
+					itemName.OverrideColor = OverrideNameColor.Value;
 				}
 			}
 

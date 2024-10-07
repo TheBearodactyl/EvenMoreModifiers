@@ -8,7 +8,7 @@ namespace Loot.Essences
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault(GetType().Namespace + "." + Name);
+			// DisplayName.SetDefault(GetType().Namespace + "." + Name);
 		}
 	}
 }

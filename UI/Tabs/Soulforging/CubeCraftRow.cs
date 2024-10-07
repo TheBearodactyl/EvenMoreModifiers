@@ -6,6 +6,8 @@ using Loot.UI.Common.Controls.Button;
 using Loot.UI.Common.Controls.Panel;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -25,7 +27,7 @@ namespace Loot.UI.Tabs.Soulforging
 
 		public void UpdateText()
 		{
-			CraftingCost = ((MagicalCube)(Cube.modItem))?.EssenceCraftCost ?? 0;
+			CraftingCost = ((MagicalCube)(Cube.ModItem))?.EssenceCraftCost ?? 0;
 			Panel?.UpdateText($"{CraftingCost} essence cost");
 			Panel?.SetHoverText($"Crafting one {Cube.HoverName} costs {CraftingCost} essence");
 		}
@@ -44,10 +46,10 @@ namespace Loot.UI.Tabs.Soulforging
 
 			CubeButton = new CubeCraftButton(
 				GuiButton.ButtonType.StoneInnerBevel,
-				hintTexture: Main.itemTexture[Type]
+				hintTexture: TextureAssets.Item[Type].Value
 			);
 			CubeButton.Item = Cube;
-			CubeButton.OnClick += CubeButtonOnOnClick;
+			CubeButton.OnLeftClick += CubeButtonOnOnClick;
 			Frame.Append(CubeButton);
 
 			Panel = new GuiTextPanel();
@@ -57,7 +59,7 @@ namespace Loot.UI.Tabs.Soulforging
 			CraftButton = new GuiImageButton(GuiButton.ButtonType.None, ModContent.GetTexture("Terraria/UI/Craft_Toggle_3"));
 			CraftButton.Left.Percent = 1.0f;
 			CraftButton.Left.Pixels = -CraftButton.Width.Pixels - GuiTab.PADDING;
-			CraftButton.OnClick += CraftCube;
+			CraftButton.OnLeftClick += CraftCube;
 			Panel.Append(CraftButton);
 		}
 
@@ -77,7 +79,7 @@ namespace Loot.UI.Tabs.Soulforging
 			var info = Main.LocalPlayer.GetModPlayer<LootEssencePlayer>();
 			if (info.Essence >= CraftingCost)
 			{
-				Main.PlaySound(SoundID.Item37, -1, -1);
+				SoundEngine.PlaySound(SoundID.Item37);
 				Cube.stack++;
 				CubeButton.Item = Cube.Clone();
 				info.UseEssence(CraftingCost);

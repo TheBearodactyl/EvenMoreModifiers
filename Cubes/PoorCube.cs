@@ -15,17 +15,17 @@ namespace Loot.Cubes
 		protected override string CubeName => "Poor Cube";
 		protected override Color? OverrideNameColor => Color.White;
 
-		protected override TooltipLine ExtraTooltip => new TooltipLine(mod, "PoorCube::Description::Add_Box",
+		protected override TooltipLine ExtraTooltip => new TooltipLine(Mod, "PoorCube::Description::Add_Box",
 			"Maximum lines: 2" +
 			"\nMaximum potential: Rare" +
 			"\nAlways rolls from random modifiers")
 		{
-			overrideColor = OverrideNameColor
+			OverrideColor = OverrideNameColor
 		};
 
 		protected override void SafeDefaults()
 		{
-			item.value = Item.buyPrice(copper: 1);
+			Item.value = Item.buyPrice(copper: 1);
 		}
 
 		protected override void SafeStaticDefaults()
@@ -41,11 +41,11 @@ namespace Loot.Cubes
 			if (forcedDowngrade)
 			{
 				properties.CanUpgradeRarity = ctx => false;
-				properties.ForceModifierRarity = mod.GetModifierRarity<RareRarity>();
+				properties.ForceModifierRarity = Mod.GetModifierRarity<RareRarity>();
 			}
 
 			properties.MaxRollableLines = 2;
-			properties.ForceModifierPool = mod.GetModifierPool<AllModifiersPool>();
+			properties.ForceModifierPool = Mod.GetModifierPool<AllModifiersPool>();
 			if (!forcedDowngrade)
 			{
 				properties.CanUpgradeRarity = ctx => ctx.Rarity.GetType() == typeof(CommonRarity);

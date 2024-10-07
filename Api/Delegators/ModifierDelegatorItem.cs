@@ -4,6 +4,7 @@ using Loot.Hacks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
@@ -15,7 +16,7 @@ namespace Loot.Api.Delegators
 	internal sealed class ModifierDelegatorItem : GlobalItem
 	{
 		public override bool InstancePerEntity => false;
-		public override bool CloneNewInstances => false;
+		protected override bool CloneNewInstances => false;
 		private CheatedItemHackGlobalItem GetActivatedModifierItem(Item item) => CheatedItemHackGlobalItem.GetInfo(item);
 
 		public override bool AltFunctionUse(Item item, Player player)
@@ -35,7 +36,7 @@ namespace Loot.Api.Delegators
 			return b;
 		}
 
-		public override bool CanEquipAccessory(Item item, Player player, int slot)
+		public override bool CanEquipAccessory(Item item, Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -163,24 +164,24 @@ namespace Loot.Api.Delegators
 			return -1;
 		}
 
-		public override bool ConsumeAmmo(Item item, Player player)
+		public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
-				return base.ConsumeAmmo(item, player);
+				return base.CanConsumeAmmo(item, player);
 			}
 
-			bool b = base.ConsumeAmmo(item, player);
+			bool b = base.CanConsumeAmmo(item, player);
 
 			foreach (Modifier m in LootModItem.GetActivePool(item))
 			{
-				b &= m.ConsumeAmmo(item, player);
+				b &= m.CanConsumeAmmo(item, player);
 			}
 
 			return b;
 		}
 
-		public override void OnConsumeAmmo(Item item, Player player)
+		public override void OnConsumeAmmo(Item weapon, Item ammo, Player player)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -253,18 +254,18 @@ namespace Loot.Api.Delegators
 			return null;
 		}
 
-		public override void GetWeaponCrit(Item item, Player player, ref int crit)
+		public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
 				return;
 			}
 
-			base.GetWeaponCrit(item, player, ref crit);
+			base.ModifyWeaponCrit(item, player, ref crit);
 
 			foreach (Modifier m in LootModItem.GetActivePool(item))
 			{
-				m.GetWeaponCrit(item, player, ref crit);
+				m.ModifyWeaponCrit(item, player, ref crit);
 			}
 		}
 
@@ -283,7 +284,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
+		public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -298,18 +299,18 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
+		public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
 				return;
 			}
 
-			base.GetWeaponKnockback(item, player, ref knockback);
+			base.ModifyWeaponKnockback(item, player, ref knockback);
 
 			foreach (Modifier m in LootModItem.GetActivePool(item))
 			{
-				m.GetWeaponKnockback(item, player, ref knockback);
+				m.ModifyWeaponKnockback(item, player, ref knockback);
 			}
 		}
 
@@ -377,7 +378,7 @@ namespace Loot.Api.Delegators
 			return b;
 		}
 
-		public override void HoldStyle(Item item, Player player)
+		public override void HoldStyle(Item item, Player player, Rectangle heldItemFrame)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -478,7 +479,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
+		public override void ModifyHitNPC(Item item, Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -493,7 +494,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void ModifyHitPvp(Item item, Player player, Player target, ref int damage, ref bool crit)
+		public override void ModifyHitPvp(Item item, Player player, Player target, ref Player.HurtModifiers modifiers)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -508,18 +509,18 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override bool NewPreReforge(Item item)
+		public override void PreReforge(Item item)/* tModPorter Note: Use CanReforge instead for logic determining if a reforge can happen. */
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, Main.LocalPlayer))
 			{
-				return base.NewPreReforge(item);
+				return base.PreReforge(item);
 			}
 
-			bool b = base.NewPreReforge(item);
+			bool b = base.PreReforge(item);
 
 			foreach (Modifier m in LootModItem.GetActivePool(item))
 			{
-				b &= m.NewPreReforge(item);
+				b &= m.PreReforge(item);
 			}
 
 			return b;
@@ -540,7 +541,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+		public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -555,7 +556,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+		public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -587,7 +588,7 @@ namespace Loot.Api.Delegators
 			return b;
 		}
 
-		public override void PickAmmo(Item item, Player player, ref int type, ref float speed, ref int damage, ref float knockback)
+		public override void PickAmmo(Item weapon, Item ammo, Player player, ref int type, ref float speed, ref StatModifier damage, ref float knockback)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -807,7 +808,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -886,7 +887,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override bool UseItem(Item item, Player player)
+		public override bool? UseItem(Item item, Player player)/* tModPorter Suggestion: Return null instead of false */
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{
@@ -935,7 +936,7 @@ namespace Loot.Api.Delegators
 			}
 		}
 
-		public override void UseStyle(Item item, Player player)
+		public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
 		{
 			if (GetActivatedModifierItem(item).ShouldBeIgnored(item, player))
 			{

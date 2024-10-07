@@ -19,12 +19,12 @@ namespace Loot.Api.Ext
 		public static IEnumerable<T> GetDistinctModItems<T>(this Item[] inventory) where T : ModItem
 			=> inventory
 				.Where(x => !x.IsAir
-				            && x.modItem is T)
+				            && x.ModItem is T)
 				.GroupBy(x => x.type)
-				.Select(g => (T)g.First().modItem);
+				.Select(g => (T)g.First().ModItem);
 
 		public static int CountModItemStack<T>(this Item[] inventory, bool includeMouseItem = false) where T : ModItem
-			=> CountItemStack(inventory, includeMouseItem, item => item.modItem is T);
+			=> CountItemStack(inventory, includeMouseItem, item => item.ModItem is T);
 
 		public static int CountItemStack(this Item[] inventory, int type, bool includeMouseItem = false)
 			=> CountItemStack(inventory, includeMouseItem, item => item.type == type);

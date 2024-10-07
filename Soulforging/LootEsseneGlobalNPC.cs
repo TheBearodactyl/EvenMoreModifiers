@@ -5,7 +5,7 @@ namespace Loot.Soulforging
 {
 	internal class LootEsseneGlobalNPC : GlobalNPC
 	{
-		public override void NPCLoot(NPC npc)
+		public override void OnKill(NPC npc)
 		{
 			var player = Main.LocalPlayer.GetModPlayer<LootEssencePlayer>();
 			if (!ModContent.GetInstance<LootEssenceWorld>().SoulforgingUnlocked) return;

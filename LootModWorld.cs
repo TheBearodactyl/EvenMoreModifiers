@@ -2,24 +2,24 @@ using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace Loot
 {
 	/// <summary>
 	/// This class is responsible for generating modifiers when a world is being created.
 	/// </summary>
-	public class LootModWorld : ModWorld
+	public class LootModWorld : ModSystem
 	{
 		// The world has not initialized yet, when it is first updated
 		public static bool Initialized { get; internal set; }
 
-		public override void Initialize()
+		public override void OnWorldLoad()/* tModPorter Suggestion: Also override OnWorldUnload, and mirror your worldgen-sensitive data initialization in PreWorldGen */
 		{
 			Initialized = false;
 		}
 
-		public override TagCompound Save()
+		public override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			return new TagCompound
 			{
@@ -27,7 +27,7 @@ namespace Loot
 			};
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadWorldData(TagCompound tag)
 		{
 			try
 			{
@@ -39,7 +39,7 @@ namespace Loot
 			}
 		}
 
-		public override void PostUpdate()
+		public override void PostUpdateWorld()
 		{
 			if (Initialized)
 			{
@@ -55,7 +55,7 @@ namespace Loot
 
 		// TODO hardmode task, generate better modifiers in new biomes etc.
 
-		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
 		{
 			//tasks.Add(new WorldGenModifiersPass("EvenMoreModifiers:WorldGenModifiersPass", 1));
 		}

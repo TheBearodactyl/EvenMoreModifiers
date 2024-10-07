@@ -1,6 +1,7 @@
 using Loot.Api.Core;
 using Loot.Modifiers.Base;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Loot.Modifiers.WeaponModifiers
 {
@@ -21,9 +22,9 @@ namespace Loot.Modifiers.WeaponModifiers
 		public override bool CanRoll(ModifierContext ctx)
 			=> base.CanRoll(ctx) && ctx.Item.knockBack > 0;
 
-		public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
+		public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback)
 		{
-			base.GetWeaponKnockback(item, player, ref knockback);
+			base.ModifyWeaponKnockback(item, player, ref knockback);
 			knockback *= Properties.RoundedPower / 100f + 1;
 		}
 	}

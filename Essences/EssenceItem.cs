@@ -39,16 +39,16 @@ namespace Loot.Essences
 
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault($@"Essence
+			/* Tooltip.SetDefault($@"Essence
 Tier: {GetTierText()}
 {Description}
-Used in an essence crafting device");
+Used in an essence crafting device"); */
 		}
 
 		public override void SetDefaults()
 		{
-			item.rare = (int)Tier + 1;
-			item.maxStack = 999;
+			Item.rare = (int)Tier + 1;
+			Item.maxStack = 999;
 		}
 
 		public virtual RollingStrategy GetRollingStrategy(Item item, RollingStrategyProperties properties)

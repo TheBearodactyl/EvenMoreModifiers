@@ -2,6 +2,7 @@ using Loot.Api.ModContent;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 
 namespace Loot.Api.Graphics.Glowmask
 {
@@ -32,7 +33,7 @@ namespace Loot.Api.Graphics.Glowmask
 			if (GlowmaskTexture != null) return;
 			var graphicsContent = Loot.ModContentManager.GetContent<GraphicsModContent>();
 			graphicsContent?.Prepare(item);
-			GlowmaskTexture = graphicsContent?.GetPreparedGlowmask(item.type.ToString()) ?? Main.itemTexture[item.type];
+			GlowmaskTexture = graphicsContent?.GetPreparedGlowmask(item.type.ToString()) ?? TextureAssets.Item[item.type].Value;
 		}
 
 		/// <summary>
@@ -72,7 +73,7 @@ namespace Loot.Api.Graphics.Glowmask
 			if (!DrawHitbox) return;
 			Rectangle hitbox = Entity.Hitbox;
 			hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-			spriteBatch.Draw(Main.magicPixel, hitbox, Color.White);
+			spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.White);
 		}
 	}
 }

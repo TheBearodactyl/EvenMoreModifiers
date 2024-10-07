@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 
 namespace Loot.UI.Common.Controls.Panel
@@ -27,7 +28,7 @@ namespace Loot.UI.Common.Controls.Panel
 			if (_text == null) return;
 			_text.SetText(line);
 			_text.Left.Pixels = GuiTab.PADDING;
-			_text.Top.Set(Main.fontMouseText.MeasureString(line).Y * 0.375f, 0);
+			_text.Top.Set(FontAssets.MouseText.Value.MeasureString(line).Y * 0.375f, 0);
 		}
 
 		public void ResetText()

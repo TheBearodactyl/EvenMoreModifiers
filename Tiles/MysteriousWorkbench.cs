@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -17,7 +18,7 @@ namespace Loot.Tiles
 		private const int Size = 16;
 		private const int Padding = 2;
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileLighted[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -42,11 +43,11 @@ namespace Loot.Tiles
 			TileObjectData.addTile(Type);
 			//AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("MysteriousWorkbench");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("MysteriousWorkbench");
 			AddMapEntry(new Color(50, 50, 50), name);
 
-			disableSmartCursor = true;
+			disableSmartCursor/* tModPorter Note: Removed. Use TileID.Sets.DisableSmartCursor instead */ = true;
 		}
 
 		public override void MouseOver(int i, int j)
@@ -55,28 +56,28 @@ namespace Loot.Tiles
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
 			player.noThrow = 2;
-			player.showItemIcon = true;
+			player.cursorItemIconEnabled = true;
 			// player.showItemIconText = "MysteriousWorkbench";
-			player.showItemIcon2 = ModContent.ItemType<MysteriousWorkbenchItem>();
+			player.cursorItemIconID = ModContent.ItemType<MysteriousWorkbenchItem>();
 		}
 
 		public override void MouseOverFar(int i, int j)
 		{
 			MouseOver(i, j);
 			Player player = Main.LocalPlayer;
-			if (player.showItemIconText == "")
+			if (player.cursorItemIconText == "")
 			{
-				player.showItemIcon = false;
-				player.showItemIcon2 = 0;
+				player.cursorItemIconEnabled = false;
+				player.cursorItemIconID = 0;
 			}
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
 			Main.mouseRightRelease = false;
 
-			if (tile.type == Type && Main.LocalPlayer.Distance(new Point16(i, j).ToWorldCoordinates()) <= 15 * 16f)
+			if (tile.TileType == Type && Main.LocalPlayer.Distance(new Point16(i, j).ToWorldCoordinates()) <= 15 * 16f)
 			{
 				Loot.Instance.GuiState.ToggleUI(Loot.Instance.GuiInterface);
 				return true;
@@ -90,7 +91,7 @@ namespace Loot.Tiles
 			Color useColor = Color.White;
 			Tile tile = Main.tile[i, j];
 
-			if (tile.type == Type)
+			if (tile.TileType == Type)
 			{
 				var sine = (float) Math.Sin(Main.essScale * 0.50f);
 				r = 0.05f + 0.35f * sine * useColor.R * 0.01f;
@@ -99,7 +100,7 @@ namespace Loot.Tiles
 			}
 		}
 
-		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
+		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
 		{
 			if (Loot.Instance.GuiState.Visible && Main.LocalPlayer.Distance(new Point16(i, j).ToWorldCoordinates()) > 15 * 16f)
 			{
@@ -125,7 +126,7 @@ namespace Loot.Tiles
 		{
 			var tile = Main.tile[i, j];
 			// Only draw from top left tile
-			if (tile.type == Type
+			if (tile.TileType == Type
 			    && tile.IsTopLeftFrame())
 			{
 				var top = tile.GetTopLeftFrame(i, j, Size, Padding);

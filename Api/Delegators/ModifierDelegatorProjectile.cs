@@ -15,7 +15,7 @@ namespace Loot.Api.Delegators
 	public class ModifierDelegatorProjectile : GlobalProjectile
 	{
 		public override bool InstancePerEntity => true;
-		public override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 
 		public override GlobalProjectile Clone()
 		{
@@ -115,7 +115,7 @@ namespace Loot.Api.Delegators
 
 		// TODO I hate the copy pasta
 
-		public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			HealthyBonus(projectile, ref damage, target);
 			CritBonus(projectile, ref damage, crit);
@@ -123,33 +123,33 @@ namespace Loot.Api.Delegators
 		}
 
 		// shouldn't run
-		public override void ModifyHitPlayer(Projectile projectile, Player target, ref int damage, ref bool crit)
+		public override void ModifyHitPlayer(Projectile projectile, Player target, ref Player.HurtModifiers modifiers)
 		{
 			HealthyBonus(projectile, ref damage, target);
 			CritBonus(projectile, ref damage, crit);
 			base.ModifyHitPlayer(projectile, target, ref damage, ref crit);
 		}
 
-		public override void ModifyHitPvp(Projectile projectile, Player target, ref int damage, ref bool crit)
+		public override void ModifyHitPvp(Projectile projectile, Player target, ref int damage, ref bool crit)/* tModPorter Note: Removed. Use ModifyHitPlayer and check modifiers.PvP */
 		{
 			HealthyBonus(projectile, ref damage, target);
 			CritBonus(projectile, ref damage, crit);
 			base.ModifyHitPvp(projectile, target, ref damage, ref crit);
 		}
 
-		public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			AttemptDebuff(projectile, target);
 			base.OnHitNPC(projectile, target, damage, knockback, crit);
 		}
 
-		public override void OnHitPlayer(Projectile projectile, Player target, int damage, bool crit)
+		public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
 		{
 			AttemptDebuff(projectile, target);
 			base.OnHitPlayer(projectile, target, damage, crit);
 		}
 
-		public override void OnHitPvp(Projectile projectile, Player target, int damage, bool crit)
+		public override void OnHitPvp(Projectile projectile, Player target, int damage, bool crit)/* tModPorter Note: Removed. Use OnHitPlayer and check info.PvP */
 		{
 			AttemptDebuff(projectile, target);
 			base.OnHitPvp(projectile, target, damage, crit);

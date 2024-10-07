@@ -5,7 +5,7 @@ using Terraria.ModLoader.IO;
 
 namespace Loot.Soulforging
 {
-	internal class LootEssenceWorld : ModWorld
+	internal class LootEssenceWorld : ModSystem
 	{
 		public HashSet<int> UnlockedCubes = new HashSet<int>();
 		// TODO for now default unlocked, until souls are implemented
@@ -21,15 +21,15 @@ namespace Loot.Soulforging
 			return UnlockedCubes.Contains(type);
 		}
 
-		public override TagCompound Save()
+		public override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			var items = new Dictionary<string, List<string>>();
 			foreach (var type in UnlockedCubes)
 			{
 				var item = new Item();
 				item.SetDefaults(type);
-				if (!items.ContainsKey(item.modItem.mod.Name)) items.Add(item.modItem.mod.Name, new List<string>());
-				items[item.modItem.mod.Name].Add(item.modItem.Name);
+				if (!items.ContainsKey(item.ModItem.Mod.Name)) items.Add(item.ModItem.Mod.Name, new List<string>());
+				items[item.ModItem.Mod.Name].Add(item.ModItem.Name);
 			}
 			var tc = new TagCompound();
 			foreach (string mod in items.Keys)
@@ -43,7 +43,7 @@ namespace Loot.Soulforging
 			};
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadWorldData(TagCompound tag)
 		{
 			foreach (var kvp in tag.GetCompound("UnlockedCubes"))
 			{
@@ -51,7 +51,7 @@ namespace Loot.Soulforging
 				var items = kvp.Value as List<string>;
 				items.ForEach(item =>
 				{
-					UnlockedCubes.Add(ModLoader.GetMod(mod).ItemType(item));
+					UnlockedCubes.Add(ModLoader.GetMod(mod).Find<ModItem>(item).Type);
 				});
 			}
 			SoulforgingUnlocked = tag.GetBool("SoulforgingUnlocked");

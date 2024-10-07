@@ -51,9 +51,9 @@ namespace Loot.Api.Delegators
 		//}
 
 		public event Action<Player> OnRespawnEvent;
-		public override void OnRespawn(Player player)
+		public override void OnRespawn()
 		{
-			OnRespawnEvent?.Invoke(player);
+			OnRespawnEvent?.Invoke(Player);
 		}
 
 		public event Func<Item[], int, int, bool> ShiftClickSlotEvent;
@@ -146,7 +146,7 @@ namespace Loot.Api.Delegators
 		public event Action ResetEffectsEvent;
 		public override void ResetEffects()
 		{
-			if (player.GetModPlayer<ModifierCachePlayer>().Ready)
+			if (Player.GetModPlayer<ModifierCachePlayer>().Ready)
 			{
 				ResetEffectsEvent?.Invoke();
 			}
@@ -233,33 +233,33 @@ namespace Loot.Api.Delegators
 
 		public delegate bool PreHurtEventRaiser(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource);
 		public event PreHurtEventRaiser PreHurtEvent;
-		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public override void ModifyHurt(ref Player.HurtModifiers modifiers)
 		{
 			return PreHurtEvent?.Invoke(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource)
-				   ?? base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+				   ?? base.ModifyHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
 		}
 
 		public event Action<bool, bool, double, int, bool> HurtEvent;
-		public override void Hurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public override void OnHurt(Player.HurtInfo info)
 		{
 			HurtEvent?.Invoke(pvp, quiet, damage, hitDirection, crit);
 		}
 
 		public event Action<bool, bool, double, int, bool> PostHurtEvent;
-		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public override void PostHurt(Player.HurtInfo info)
 		{
 			PostHurtEvent?.Invoke(pvp, quiet, damage, hitDirection, crit);
 		}
 
 		public event Func<Item, NPC, bool?> CanHitNPCEvent;
-		public override bool? CanHitNPC(Item item, NPC target)
+		public override bool? CanHitNPCWithItem(Item item, NPC target)
 		{
-			return CanHitNPCEvent?.Invoke(item, target) ?? base.CanHitNPC(item, target);
+			return CanHitNPCEvent?.Invoke(item, target) ?? base.CanHitNPCWithItem(item, target);
 		}
 
 		public delegate void ModifyHitNPCEventRaiser(Item item, NPC target, ref int damage, ref float knockback, ref bool crit);
 		public event ModifyHitNPCEventRaiser ModifyHitNPCEvent;
-		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Item, consider using ModifyHitNPC instead */
 		{
 			ModifyHitNPCEvent?.Invoke(item, target, ref damage, ref knockback, ref crit);
 		}
@@ -272,13 +272,13 @@ namespace Loot.Api.Delegators
 
 		public delegate void ModifyHitPvpEventRaiser(Item item, Player target, ref int damage, ref bool crit);
 		public event ModifyHitPvpEventRaiser ModifyHitPvpEvent;
-		public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
+		public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
 		{
 			ModifyHitPvpEvent?.Invoke(item, target, ref damage, ref crit);
 		}
 
 		public event Action<Item, NPC, int, float, bool> OnHitNPCEvent;
-		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Item, consider using OnHitNPC instead */
 		{
 			OnHitNPCEvent?.Invoke(item, target, damage, knockback, crit);
 		}
@@ -291,19 +291,19 @@ namespace Loot.Api.Delegators
 
 		public delegate void ModifyHitNPCWithProjEventRaiser(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection);
 		public event ModifyHitNPCWithProjEventRaiser ModifyHitNPCWithProjEvent;
-		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Projectile, consider using ModifyHitNPC instead */
 		{
 			ModifyHitNPCWithProjEvent?.Invoke(proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}
 
 		public event Action<Projectile, NPC, int, float, bool> OnHitNPCWithProjEvent;
-		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Projectile, consider using OnHitNPC instead */
 		{
 			OnHitNPCWithProjEvent?.Invoke(proj, target, damage, knockback, crit);
 		}
 
 		public event Action<Item, Player, int, bool> OnHitPvpEvent;
-		public override void OnHitPvp(Item item, Player target, int damage, bool crit)
+		public override void OnHitPvp(Item item, Player target, int damage, bool crit)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
 		{
 			OnHitPvpEvent?.Invoke(item, target, damage, crit);
 		}
@@ -316,13 +316,13 @@ namespace Loot.Api.Delegators
 
 		public delegate void ModifyHitPvpWithProjEventRaiser(Projectile proj, Player target, ref int damage, ref bool crit);
 		public event ModifyHitPvpWithProjEventRaiser ModifyHitPvpWithProjEvent;
-		public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
+		public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
 		{
 			ModifyHitPvpWithProjEvent?.Invoke(proj, target, ref damage, ref crit);
 		}
 
 		public event Action<Projectile, Player, int, bool> OnHitPvpWithProjEvent;
-		public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
+		public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
 		{
 			OnHitPvpWithProjEvent?.Invoke(proj, target, damage, crit);
 		}
@@ -336,14 +336,14 @@ namespace Loot.Api.Delegators
 
 		public delegate void ModifyHitByNPCEventRaiser(NPC npc, ref int damage, ref bool crit);
 		public event ModifyHitByNPCEventRaiser ModifyHitByNPCEvent;
-		public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
+		public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
 		{
 			ModifyHitByNPCEvent?.Invoke(npc, ref damage, ref crit);
 		}
 
 		public delegate void ModifyWeaponDamageEventRaiser(Item item, ref float add, ref float mult, ref float flat);
 		public event ModifyWeaponDamageEventRaiser ModifyWeaponDamageEvent;
-		public override void ModifyWeaponDamage(Item item, ref float add, ref float mult, ref float flat)
+		public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
 		{
 			ModifyWeaponDamageEvent?.Invoke(item, ref add, ref mult, ref flat);
 		}
@@ -356,7 +356,7 @@ namespace Loot.Api.Delegators
 		}
 
 		public event Action<NPC, int, bool> OnHitByNPCEvent;
-		public override void OnHitByNPC(NPC npc, int damage, bool crit)
+		public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
 		{
 			OnHitByNPCEvent?.Invoke(npc, damage, crit);
 		}
@@ -369,20 +369,20 @@ namespace Loot.Api.Delegators
 
 		public delegate void ModifyHitByProjectileEventRaiser(Projectile projectile, ref int damage, ref bool crit);
 		public event ModifyHitByProjectileEventRaiser ModifyHitByProjectileEvent;
-		public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
+		public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
 		{
 			ModifyHitByProjectileEvent?.Invoke(proj, ref damage, ref crit);
 		}
 
 		public event Action<Projectile, int, bool> OnHitByProjectileEvent;
-		public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+		public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
 		{
 			OnHitByProjectileEvent?.Invoke(proj, damage, crit);
 		}
 
 		public delegate void CatchFishEventRaiser(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk);
 		public event CatchFishEventRaiser CatchFishEvent;
-		public override void CatchFish(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk)
+		public override void CatchFish(FishingAttempt attempt, ref int itemDrop, ref int npcSpawn, ref AdvancedPopupRequest sonar, ref Vector2 sonarPosition)
 		{
 			CatchFishEvent?.Invoke(fishingRod, bait, power, liquidType, poolSize, worldLayer, questFish, ref caughtType, ref junk);
 		}
@@ -406,16 +406,16 @@ namespace Loot.Api.Delegators
 			GetDyeTraderRewardEvent?.Invoke(rewardPool);
 		}
 
-		public delegate void DrawEffectsEventRaiser(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright);
+		public delegate void DrawEffectsEventRaiser(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright);
 		public event DrawEffectsEventRaiser DrawEffectsEvent;
-		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+		public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
 			DrawEffectsEvent?.Invoke(drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
 		}
 
-		public delegate void ModifyDrawInfoEventRaiser(ref PlayerDrawInfo drawInfo);
+		public delegate void ModifyDrawInfoEventRaiser(ref PlayerDrawSet drawInfo);
 		public event ModifyDrawInfoEventRaiser ModifyDrawInfoEvent;
-		public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
+		public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
 		{
 			ModifyDrawInfoEvent?.Invoke(ref drawInfo);
 		}
@@ -499,22 +499,22 @@ namespace Loot.Api.Delegators
 
 		public delegate void GetWeaponKnockbackEventRaiser(Item item, ref float knockback);
 		public event GetWeaponKnockbackEventRaiser GetWeaponKnockbackEvent;
-		public override void GetWeaponKnockback(Item item, ref float knockback)
+		public override void ModifyWeaponKnockback(Item item, ref StatModifier knockback)
 		{
 			GetWeaponKnockbackEvent?.Invoke(item, ref knockback);
 		}
 
 		public delegate void GetWeaponCritEventRaiser(Item item, ref int crit);
 		public event GetWeaponCritEventRaiser GetWeaponCritEvent;
-		public override void GetWeaponCrit(Item item, ref int crit)
+		public override void ModifyWeaponCrit(Item item, ref float crit)
 		{
 			GetWeaponCritEvent?.Invoke(item, ref crit);
 		}
 
 		public event Func<Item, Item, bool> ConsumeAmmoEvent;
-		public override bool ConsumeAmmo(Item weapon, Item ammo)
+		public override bool CanConsumeAmmo(Item weapon, Item ammo)
 		{
-			return ConsumeAmmoEvent?.Invoke(weapon, ammo) ?? base.ConsumeAmmo(weapon, ammo);
+			return ConsumeAmmoEvent?.Invoke(weapon, ammo) ?? base.CanConsumeAmmo(weapon, ammo);
 		}
 
 		public event Action<Item, Item> OnConsumeAmmoEvent;
@@ -525,7 +525,7 @@ namespace Loot.Api.Delegators
 
 		public delegate bool ShootEventRaiser(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack);
 		public event ShootEventRaiser ShootEvent;
-		public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override bool Shoot(Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			return ShootEvent?.Invoke(item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack)
 				?? base.Shoot(item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);

@@ -41,7 +41,7 @@ namespace Loot.Soulforging
 			TopEssence = amount;
 		}
 
-		public override TagCompound Save()
+		public override void SaveData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
 			return new TagCompound
 			{
@@ -50,7 +50,7 @@ namespace Loot.Soulforging
 			};
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadData(TagCompound tag)
 		{
 			Essence = tag.GetInt("Essence");
 			KillCount = tag.GetInt("KillCount");

@@ -13,18 +13,18 @@ namespace Loot.Cubes
 		protected override string CubeName => "Black Cube";
 		protected override Color? OverrideNameColor => Color.LightSlateGray;
 
-		protected override TooltipLine ExtraTooltip => new TooltipLine(mod, "BlackCube::Description::Add_Box",
+		protected override TooltipLine ExtraTooltip => new TooltipLine(Mod, "BlackCube::Description::Add_Box",
 			"Always rolls 4 lines" +
 			"\nMaximum potential: Legendary" +
 			"\nCan roll 25% stronger modifiers" +
 			"\n+4 luck with this cube")
 		{
-			overrideColor = OverrideNameColor
+			OverrideColor = OverrideNameColor
 		};
 
 		protected override void SafeDefaults()
 		{
-			item.value = Item.buyPrice(copper: 1);
+			Item.value = Item.buyPrice(copper: 1);
 		}
 
 		protected override void SafeStaticDefaults()

@@ -1,6 +1,7 @@
 using Loot.Api.Core;
 using Loot.Modifiers.Base;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Loot.Modifiers.WeaponModifiers
 {
@@ -19,7 +20,7 @@ namespace Loot.Modifiers.WeaponModifiers
 				.WithMaxMagnitude(15f);
 		}
 
-		public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
+		public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
 		{
 			base.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
 			float mag = Properties.RoundedPower * ((player.statLifeMax2 - player.statLife) / (float)player.statLifeMax2); 

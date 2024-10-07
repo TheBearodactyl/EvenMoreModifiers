@@ -25,7 +25,7 @@ namespace Loot.UI
 		{
 			TargetState = state;
 			_texture = GetTexture();
-			OnClick += (evt, element) =>
+			OnLeftClick += (evt, element) =>
 			{
 				WhenClicked?.Invoke(evt, element, this);
 			};

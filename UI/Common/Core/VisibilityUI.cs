@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.UI;
 
@@ -27,7 +28,7 @@ namespace Loot.UI.Common.Core
 			theInterface.ResetLasts();
 			theInterface.SetState(Visible ? uiStateInstance : null);
 
-			Main.PlaySound(SoundID.MenuOpen);
+			SoundEngine.PlaySound(SoundID.MenuOpen);
 		}
 	}
 }

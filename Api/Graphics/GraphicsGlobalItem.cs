@@ -20,7 +20,7 @@ namespace Loot.Api.Graphics
 		public List<GlowmaskEntity> GlowmaskEntities { get; internal set; } = new List<GlowmaskEntity>();
 
 		public override bool InstancePerEntity => true;
-		public override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 
 		public static GraphicsGlobalItem GetInfo(Item item) => item.GetGlobalItem<GraphicsGlobalItem>();
 

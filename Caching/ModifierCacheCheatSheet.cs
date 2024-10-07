@@ -11,7 +11,7 @@ namespace Loot.Caching
 		private void UpdateCheatSheetCache()
 		{
 			// get cheat sheet slots
-			var curEquips = CheatSheetInterface.GetEnabledExtraAccessories(player).Take(_oldCheatSheetEquips.Length).ToArray();
+			var curEquips = CheatSheetInterface.GetEnabledExtraAccessories(Player).Take(_oldCheatSheetEquips.Length).ToArray();
 
 			// go over enabled slots
 			for (int i = 0; i < curEquips.Length; i++)

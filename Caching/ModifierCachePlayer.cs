@@ -43,7 +43,7 @@ namespace Loot.Caching
 
 		public override void Initialize()
 		{
-			_oldSelectedItem = player.selectedItem;
+			_oldSelectedItem = Player.selectedItem;
 			_oldMouseItem = null;
 			_oldEquips = new Item[8];
 			_oldVanityEquips = new Item[8];
@@ -89,7 +89,7 @@ namespace Loot.Caching
 		/// </summary>
 		private void UpdateAttachments()
 		{
-			ModifierDelegatorPlayer modDelegatorPlayer = ModifierDelegatorPlayer.GetPlayer(player);
+			ModifierDelegatorPlayer modDelegatorPlayer = ModifierDelegatorPlayer.GetPlayer(Player);
 
 			// Manual detach
 			var detachEffects = GetModifierEffectsForDelegations(_detachList, modDelegatorPlayer, (e) => e.IsBeingDelegated && !_modifierEffects.Contains(e.GetType()));
@@ -184,18 +184,18 @@ namespace Loot.Caching
 		public override void PostUpdate()
 		{
 			// If our equips cache is not the right size we resize it and force an update
-			if (_oldEquips.Length != 8 + player.extraAccessorySlots)
+			if (_oldEquips.Length != 8 + Player.extraAccessorySlots)
 			{
 				Ready = false;
 				_forceEquipUpdate = true;
-				Array.Resize(ref _oldEquips, 8 + player.extraAccessorySlots);
+				Array.Resize(ref _oldEquips, 8 + Player.extraAccessorySlots);
 			}
 
-			if (_oldVanityEquips.Length != 8 + player.extraAccessorySlots)
+			if (_oldVanityEquips.Length != 8 + Player.extraAccessorySlots)
 			{
 				Ready = false;
 				_forceEquipUpdate = true;
-				Array.Resize(ref _oldVanityEquips, 8 + player.extraAccessorySlots);
+				Array.Resize(ref _oldVanityEquips, 8 + Player.extraAccessorySlots);
 			}
 
 			_detachList.Clear();
@@ -240,9 +240,9 @@ namespace Loot.Caching
 
 			_modifierEffects.Clear();
 
-			for (int i = 0; i < 8 + player.extraAccessorySlots; i++)
+			for (int i = 0; i < 8 + Player.extraAccessorySlots; i++)
 			{
-				var equip = player.armor[i];
+				var equip = Player.armor[i];
 				if (equip != null && !equip.IsAir)
 				{
 					CacheItemModifierEffects(equip);
@@ -250,9 +250,9 @@ namespace Loot.Caching
 			}
 
 			// vanity
-			for (int k = 13; k < 18 + player.extraAccessorySlots; k++)
+			for (int k = 13; k < 18 + Player.extraAccessorySlots; k++)
 			{
-				var equip = player.armor[k];
+				var equip = Player.armor[k];
 				if (equip != null
 				    && !equip.IsAir
 				    && CheatedItemHackGlobalItem.GetInfo(equip).IsCheated)
@@ -265,9 +265,9 @@ namespace Loot.Caching
 			{
 				CacheItemModifierEffects(Main.mouseItem);
 			}
-			else if (player.HeldItem != null && !player.HeldItem.IsAir && player.HeldItem.IsWeapon())
+			else if (Player.HeldItem != null && !Player.HeldItem.IsAir && Player.HeldItem.IsWeapon())
 			{
-				CacheItemModifierEffects(player.HeldItem);
+				CacheItemModifierEffects(Player.HeldItem);
 			}
 		}
 
@@ -283,7 +283,7 @@ namespace Loot.Caching
 				if (effectsAttribute == null)
 					continue;
 
-				ModifierDelegatorPlayer modDelegatorPlayer = ModifierDelegatorPlayer.GetPlayer(player);
+				ModifierDelegatorPlayer modDelegatorPlayer = ModifierDelegatorPlayer.GetPlayer(Player);
 				foreach (Type effect in effectsAttribute.Effects)
 				{
 					var modEffect = modDelegatorPlayer.GetEffect(effect);

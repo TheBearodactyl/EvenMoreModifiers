@@ -13,7 +13,9 @@ using Loot.UI.Common.Controls.Button;
 using Loot.UI.Common.Controls.Panel;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -79,18 +81,18 @@ namespace Loot.UI.Tabs.CraftingTab
 		{
 			// When a component is clicked, we need to re-verify that the link to it still exists and is still valid
 			CalculateAvailableComponents();
-			return link?.Component.modItem is MagicalCube && link.Component.stack > 0;
+			return link?.Component.ModItem is MagicalCube && link.Component.stack > 0;
 		}
 
 		private bool _VerifyComponent(CraftingComponentLink link, Item item)
 		{
 			var props = new RollingStrategyProperties();
-			if (!(link.Component.modItem is T))
+			if (!(link.Component.ModItem is T))
 			{
 				return false;
 			}
 
-			var component = link.Component.modItem;
+			var component = link.Component.ModItem;
 			RollingStrategy strategy = null;
 
 			if (component is CubeOfSealing)
@@ -118,8 +120,8 @@ namespace Loot.UI.Tabs.CraftingTab
 				.Select(x =>
 				{
 					var component = x as ModItem;
-					component.item.stack = Main.LocalPlayer.inventory.CountItemStack(component.item.type, true);
-					return new CraftingComponentLink(component.item, CraftingComponentLink.ComponentSource.Inventory);
+					component.Item.stack = Main.LocalPlayer.inventory.CountItemStack(component.Item.type, true);
+					return new CraftingComponentLink(component.Item, CraftingComponentLink.ComponentSource.Inventory);
 				});
 		}
 
@@ -207,8 +209,8 @@ namespace Loot.UI.Tabs.CraftingTab
 					DrawStack = true,
 					ShowOnlyHintOnHover = true
 				};
-				button.OnMouseOver += (evt, element) => { Main.PlaySound(12); };
-				button.OnClick += (evt, element) =>
+				button.OnMouseOver += (evt, element) => { SoundEngine.PlaySound(SoundID.MenuTick); };
+				button.OnLeftClick += (evt, element) =>
 				{
 					if (OnComponentClick?.GetInvocationList().All(x => (bool)x.DynamicInvoke(link)) ?? false)
 					{

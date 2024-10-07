@@ -8,9 +8,9 @@ namespace Loot.Soulforging
 	{
 		public override bool OnPickup(Item item, Player player)
 		{
-			if (item.modItem is MagicalCube cube)
+			if (item.ModItem is MagicalCube cube)
 			{
-				ModContent.GetInstance<LootEssenceWorld>().UnlockCube(cube.item.type);
+				ModContent.GetInstance<LootEssenceWorld>().UnlockCube(cube.Item.type);
 			}
 			// TODO if item is soul, unlock soulforging
 			return base.OnPickup(item, player);

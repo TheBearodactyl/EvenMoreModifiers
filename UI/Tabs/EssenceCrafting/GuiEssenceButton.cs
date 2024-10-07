@@ -14,10 +14,10 @@ namespace Loot.UI.Tabs.EssenceCrafting
 		}
 
 		public override bool CanTakeItem(Item givenItem)
-			=> givenItem.modItem is EssenceItem;
+			=> givenItem.ModItem is EssenceItem;
 
 		public override RollingStrategy GetRollingStrategy(Item item, RollingStrategyProperties rollingStrategyProperties)
-			=> ((EssenceItem) Item.modItem)?.GetRollingStrategy(item, rollingStrategyProperties) ?? RollingUtils.Strategies.Default;
+			=> ((EssenceItem) Item.ModItem)?.GetRollingStrategy(item, rollingStrategyProperties) ?? RollingUtils.Strategies.Default;
 
 	}
 }

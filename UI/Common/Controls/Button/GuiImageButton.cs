@@ -16,7 +16,7 @@ namespace Loot.UI.Common.Controls.Button
 			Button = new UIImageButton(texture);
 			Button.Width.Set(Width.Pixels, 0);
 			Button.Height.Set(Height.Pixels, 0);
-			Button.OnClick += (evt, element) => WhenClicked?.Invoke(evt, element, Button);
+			Button.OnLeftClick += (evt, element) => WhenClicked?.Invoke(evt, element, Button);
 			Frame.Append(Button);
 		}
 

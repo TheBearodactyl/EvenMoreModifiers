@@ -2,6 +2,7 @@ using System;
 using Loot.Api.Core;
 using Loot.Modifiers.Base;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Loot.Modifiers.WeaponModifiers
 {
@@ -20,7 +21,7 @@ namespace Loot.Modifiers.WeaponModifiers
 				.WithRoundPrecision(1);
 		}
 
-		public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
+		public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
 		{
 			base.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
 			float magnitude = Properties.RoundedPower * player.velocity.Length() / 4;

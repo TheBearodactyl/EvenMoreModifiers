@@ -10,7 +10,7 @@ namespace Loot.Hacks
 	public sealed class CheatedItemHackGlobalItem : GlobalItem
 	{
 		public override bool InstancePerEntity => true;
-		public override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 
 		/// <summary>
 		/// Keeps track of if the item was activated (by another mod)
